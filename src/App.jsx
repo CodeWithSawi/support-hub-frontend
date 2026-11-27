@@ -1,5 +1,14 @@
+import AppRoutes from "@/routes/AppRoutes";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "./context/AuthContext";
 function App() {
-  return <></>;
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;

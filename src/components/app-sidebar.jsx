@@ -1,9 +1,10 @@
-import * as React from "react";
-
-import { NavDocuments } from "@/components/nav-documents";
+import { NavLink } from "react-router";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
+import { ModeToggle } from "@/components/mode-toggle";
+import { useAuth } from "@/context/AuthContext";
+
 import {
   Sidebar,
   SidebarContent,
@@ -13,166 +14,106 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import {
-  DashboardSquare01Icon,
-  Menu01Icon,
-  ChartHistogramIcon,
-  Folder01Icon,
-  UserGroupIcon,
-  Camera01Icon,
-  File01Icon,
-  Settings05Icon,
-  HelpCircleIcon,
-  SearchIcon,
-  Database01Icon,
-  Analytics01Icon,
-  CommandIcon,
-} from "@hugeicons/core-free-icons";
+  IconDashboard,
+  IconTicket,
+  IconUsers,
+  IconChartBar,
+  IconSettings,
+  IconHelpCircle,
+  IconCommand,
+} from "@tabler/icons-react";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
-      icon: <HugeiconsIcon icon={DashboardSquare01Icon} strokeWidth={2} />,
+      url: "/dashboard",
+      icon: <IconDashboard stroke={2} />,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: <HugeiconsIcon icon={Menu01Icon} strokeWidth={2} />,
+      title: "My Tickets",
+      url: "/tickets",
+      icon: <IconTicket stroke={2} />,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: <HugeiconsIcon icon={ChartHistogramIcon} strokeWidth={2} />,
+      title: "Customers",
+      url: "/users",
+      icon: <IconUsers stroke={2} />,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: <HugeiconsIcon icon={Folder01Icon} strokeWidth={2} />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <HugeiconsIcon icon={UserGroupIcon} strokeWidth={2} />,
+      title: "Reports",
+      url: "/reports",
+      icon: <IconChartBar stroke={2} />,
     },
   ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: <HugeiconsIcon icon={Camera01Icon} strokeWidth={2} />,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: <HugeiconsIcon icon={File01Icon} strokeWidth={2} />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: <HugeiconsIcon icon={File01Icon} strokeWidth={2} />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
+
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
-      icon: <HugeiconsIcon icon={Settings05Icon} strokeWidth={2} />,
+      url: "/settings",
+      icon: <IconSettings stroke={2} />,
     },
     {
-      title: "Get Help",
-      url: "#",
-      icon: <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={2} />,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: <HugeiconsIcon icon={SearchIcon} strokeWidth={2} />,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: <HugeiconsIcon icon={Database01Icon} strokeWidth={2} />,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: <HugeiconsIcon icon={Analytics01Icon} strokeWidth={2} />,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: <HugeiconsIcon icon={File01Icon} strokeWidth={2} />,
+      title: "Help & Support",
+      url: "/help",
+      icon: <IconHelpCircle stroke={2} />,
     },
   ],
 };
+
 export function AppSidebar({ ...props }) {
+  const { user } = useAuth();
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="px-3 py-4 group-data-[collapsible=icon]:px-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-              render={<a href="#" />}
+              size="lg"
+              className="h-14 gap-3 p-2"
+              render={<NavLink to="/dashboard" />}
             >
-              <HugeiconsIcon
-                icon={CommandIcon}
-                strokeWidth={2}
-                className="size-5!"
-              />
-              <span className="text-base font-semibold">Acme Inc.</span>
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm group-data-[collapsible=icon]:size-8">
+                <IconCommand stroke={2} className="size-5" />
+              </span>
+              <span className="min-w-0 group-data-[collapsible=icon]:hidden">
+                <span className="block truncate text-sm font-semibold tracking-tight">
+                  Support Hub
+                </span>
+                <span className="block truncate text-[11px] font-normal text-muted-foreground">
+                  Support workspace
+                </span>
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+
+      <SidebarContent className="gap-2 py-2">
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary
+          items={data.navSecondary}
+          className="mt-auto border-t border-sidebar-border/70 pt-3"
+        />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
+
+      <SidebarFooter className="gap-3 border-t border-sidebar-border/70 p-3 group-data-[collapsible=icon]:p-2">
+        <div className="flex items-center justify-between gap-2 px-1 group-data-[collapsible=icon]:justify-center">
+          <span className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
+            Appearance
+          </span>
+          <ModeToggle />
+        </div>
+        <NavUser
+          user={{
+            name: user?.name || "Support Hub",
+            email: user?.email || "support@example.com",
+            avatar: user?.avatar || "",
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   );

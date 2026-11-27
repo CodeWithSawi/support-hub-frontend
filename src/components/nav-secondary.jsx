@@ -1,10 +1,9 @@
 "use client"
 
-import * as React from "react"
-
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,6 +15,9 @@ export function NavSecondary({
 }) {
   return (
     <SidebarGroup {...props}>
+      <SidebarGroupLabel className="px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        Support &amp; settings
+      </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (

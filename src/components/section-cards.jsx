@@ -1,108 +1,70 @@
-"use client"
-
-import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ChartUpIcon, ChartDownIcon } from "@hugeicons/core-free-icons"
+} from "@/components/ui/card";
+
+import { useDashboard } from "@/context/DashboardContext";
 
 export function SectionCards() {
+  const { tickets, loading, error } = useDashboard();
+
+  const ticketStats = [
+    {
+      title: "Total Tickets",
+      value: tickets.length,
+      description: "All active tickets in the system",
+      footer: "Total number of active tickets",
+    },
+    {
+      title: "Open Tickets",
+      value: tickets.filter((ticket) => ticket.status === "open").length,
+      description: "Tickets awaiting attention",
+      footer: "Tickets that still need to be handled",
+    },
+    {
+      title: "In Progress",
+      value: tickets.filter((ticket) => ticket.status === "in_progress").length,
+      description: "Tickets currently being handled",
+      footer: "Tickets assigned and being worked on",
+    },
+    {
+      title: "Resolved Tickets",
+      value: tickets.filter((ticket) => ticket.status === "resolved").length,
+      description: "Tickets with a resolved status",
+      footer: "Tickets marked as resolved",
+    },
+  ];
+
+  if (error) {
+    return (
+      <p className="text-sm text-destructive">
+        Failed to load ticket statistics: {error}
+      </p>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <HugeiconsIcon icon={ChartUpIcon} strokeWidth={2} />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month{" "}
-            <HugeiconsIcon icon={ChartUpIcon} strokeWidth={2} className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <HugeiconsIcon icon={ChartDownIcon} strokeWidth={2} />
-              -20%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period{" "}
-            <HugeiconsIcon icon={ChartDownIcon} strokeWidth={2} className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <HugeiconsIcon icon={ChartUpIcon} strokeWidth={2} />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention{" "}
-            <HugeiconsIcon icon={ChartUpIcon} strokeWidth={2} className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <HugeiconsIcon icon={ChartUpIcon} strokeWidth={2} />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase{" "}
-            <HugeiconsIcon icon={ChartUpIcon} strokeWidth={2} className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {ticketStats.map((stat) => (
+        <Card key={stat.title}>
+          <CardHeader>
+            <CardDescription>{stat.title}</CardDescription>
+
+            <CardTitle className="text-2xl font-semibold tabular-nums">
+              {loading ? "—" : stat.value.toLocaleString()}
+            </CardTitle>
+          </CardHeader>
+
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <p className="font-medium">{stat.description}</p>
+
+            <p className="text-muted-foreground">{stat.footer}</p>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
-  )
+  );
 }
